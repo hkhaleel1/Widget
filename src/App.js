@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import Header from './layout/Header'
+import Footer from './layout/Footer'
 
-function App() {
+import './App.css';
+import axios from 'axios';
+
+export default function App ({ domElement }) {
+  
+  const endPoint = domElement.getAttribute("data-src");
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState('');
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setLoading(true)
+
+     // Retrieve information 
+    axios.get(endPoint)
+    .then( ({ data }) => { 
+      setLoading(false);
+      setData(data);
+    })
+    .catch((e) => {
+      console.log(e)
+      setLoading(false);
+      setError('error fetching from data-src');
+    });
+  },[ endPoint ]);
+
+  const  { headerText,footerText, url, imageUrl } = data
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="widgetApp">
+      <div>
+          {loading ? "Loading..." :
+          error ? error : 
+          <>
+            <Header text={headerText}/>
+            <a href={url}>
+              <img src={imageUrl} alt="widgetImage" style={imgStyle}/>
+              <Footer text={footerText} /> 
+            </a>
+          </>} 
+      </div>           
     </div>
   );
 }
 
-export default App;
+const imgStyle = {
+  width: '100%',
+  height: 'auto'
+}
+
