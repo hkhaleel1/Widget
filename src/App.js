@@ -5,9 +5,9 @@ import Footer from './layout/Footer'
 import './App.css';
 import axios from 'axios';
 
-export default function App ({ domElement }) {
+export default function App ({ src }) {
   
-  const endPoint = domElement.getAttribute("data-src");
+  // const endPoint = domElement.getAttribute("data-src");
   const [loading, setLoading] = useState();
   const [error, setError] = useState('');
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ export default function App ({ domElement }) {
     setLoading(true)
 
      // Retrieve information 
-    axios.get(endPoint)
+    axios.get(src)
     .then( ({ data }) => { 
       setLoading(false);
       setData(data);
@@ -26,7 +26,7 @@ export default function App ({ domElement }) {
       setLoading(false);
       setError('error fetching from data-src');
     });
-  },[ endPoint ]);
+  },[ src ]);
 
   const  { headerText,footerText, url, imageUrl } = data
 
